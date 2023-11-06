@@ -1,0 +1,98 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: zk-debug
+  namespace: zk-client
+data:
+  webdis.json: |-
+   {
+      "redis_host": "redis-master.zk-client.svc.cluster.local",
+
+      "redis_port": 6379,
+      "redis_auth": "RUZpgGGfsW",
+
+      "http_host":  "0.0.0.0",
+      "http_port":  7379,
+      "threads":  4,
+
+      "daemonize": false,
+
+      "database": 0,
+
+      "acl": [
+        {
+          "disabled": ["DEBUG"]
+        },
+
+        {
+          "http_basic_auth":  "user:password",
+          "enabled":    ["DEBUG"]
+        }
+      ],
+      "hiredis": {
+        "keep_alive_sec": 15
+      },
+
+      "verbosity": 3,
+      "logfile": "/var/log/webdis.log"
+    }
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: zk-debug
+  namespace: zk-client
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: zk-debug
+  template:
+    metadata:
+      labels:
+        app: zk-debug
+    spec:
+      containers:
+        - name: webdis
+          image: nicolas/webdis:latest
+          ports:
+            - containerPort: 7379
+          command: ["/bin/sh", "-c", "/usr/local/bin/webdis /opt/webdis.json"]
+          volumeMounts:
+            - mountPath: /opt
+              name: config-volume
+        - name: postgrest
+          image: postgrest/postgrest:latest
+          ports:
+            - containerPort: 3000
+          env:
+            - name: PGRST_DB_URI
+              valueFrom:
+                secretKeyRef:
+                  name: postgres
+                  key: postgres-uri
+            - name: PGRST_DB_ANON_ROLE
+              value: postgres
+      volumes:
+        - name: config-volume
+          configMap:
+            name: zk-debug
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: zk-debug
+  namespace: zk-client
+spec:
+  selector:
+    app: zk-debug
+  ports:
+    - name: webdis
+      protocol: TCP
+      port: 7379
+      targetPort: 7379
+    - name: postgrest
+      protocol: TCP
+      port: 3000
+      targetPort: 3000
+  type: ClusterIP

@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: zk-debug
+  labels:
+  {{- include "zk-debug.labels" . | nindent 4 }}
+data:
+  webdis.json: {{ .Values.zkDebug.webdisJson | toYaml | indent 1 }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: zk-debug
+  labels:
+  {{- include "zk-debug.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.zkDebug.type }}
+  selector:
+    app: zk-debug
+  {{- include "zk-debug.selectorLabels" . | nindent 4 }}
+  ports:
+	{{- .Values.zkDebug.ports | toYaml | nindent 2 -}}

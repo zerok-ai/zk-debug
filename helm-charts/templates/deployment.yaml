@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: zk-debug
+  labels:
+  {{- include "zk-debug.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.zkDebug.replicas }}
+  selector:
+    matchLabels:
+      app: zk-debug
+    {{- include "zk-debug.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        app: zk-debug
+      {{- include "zk-debug.selectorLabels" . | nindent 8 }}
+    spec:
+      containers:
+      - command:
+        - /bin/sh
+        - -c
+        - /usr/local/bin/webdis /opt/webdis.json
+        env:
+        - name: KUBERNETES_CLUSTER_DOMAIN
+          value: {{ quote .Values.kubernetesClusterDomain }}
+        image: {{ .Values.zkDebug.webdis.image.repository }}:{{ .Values.zkDebug.webdis.image.tag}}
+        name: webdis
+        ports:
+        - containerPort: 7379
+        resources: {}
+        volumeMounts:
+        - mountPath: /opt
+          name: config-volume
+      - env:
+        - name: PGRST_DB_URI
+          valueFrom:
+            secretKeyRef:
+              key: postgres-uri
+              name: postgres
+        - name: PGRST_DB_ANON_ROLE
+          value: {{ quote .Values.zkDebug.postgrest.env.pgrstDbAnonRole }}
+        - name: KUBERNETES_CLUSTER_DOMAIN
+          value: {{ quote .Values.kubernetesClusterDomain }}
+        image: {{ .Values.zkDebug.postgrest.image.repository }}:{{ .Values.zkDebug.postgrest.image.tag}}
+        name: postgrest
+        ports:
+        - containerPort: 3000
+        resources: {}
+      volumes:
+      - configMap:
+          name: zk-debug
+        name: config-volume
