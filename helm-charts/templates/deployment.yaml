@@ -37,7 +37,7 @@ spec:
           valueFrom:
             secretKeyRef:
               key: postgres-uri
-              name: postgres
+              name: postgres-uri
         - name: PGRST_DB_ANON_ROLE
           value: {{ quote .Values.zkDebug.postgrest.env.pgrstDbAnonRole }}
         - name: KUBERNETES_CLUSTER_DOMAIN

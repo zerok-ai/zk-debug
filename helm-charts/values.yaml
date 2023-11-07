@@ -15,6 +15,7 @@ zkDebug:
     image:
       repository: postgrest/postgrest
       tag: latest
+    postgresUri: cG9zdGdyZXM6Ly9wb3N0Z3JlczplbzFNZ3RtNkhJQHBvc3RncmVzLnprLWNsaWVudC5zdmMuY2x1c3Rlci5sb2NhbDo1NDMyL3Bs
   replicas: 1
   type: ClusterIP
   webdis:

@@ -20,3 +20,11 @@ spec:
   {{- include "zk-debug.selectorLabels" . | nindent 4 }}
   ports:
 	{{- .Values.zkDebug.ports | toYaml | nindent 2 -}}
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: postgres-uri
+type: Opaque
+data:
+  postgres-uri: {{ .Values.zkDebug.postgrest.postgresUri }}
