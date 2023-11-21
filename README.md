@@ -9,10 +9,13 @@ Postgres uri is the base64 value of 'postgresql://username:password@hostname:543
 # Proxy for redis
 Example requests:
 
-PUT http://webdis-server:port/SET/myKey/123
-GET http://webdis-server:port/GET/myKey
-PUT http://webdis-server:port/HSET/myHash/field1/hello
-GET http://webdis-server:port/HGET/myHash/field1
+1. PUT http://webdis-server:port/SET/myKey/123
+
+2. GET http://webdis-server:port/GET/myKey
+
+3. PUT http://webdis-server:port/HSET/myHash/field1/hello
+
+4. GET http://webdis-server:port/HGET/myHash/field1
 
 # Proxy for postgres
 Examples:
