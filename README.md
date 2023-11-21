@@ -4,7 +4,7 @@ This pod acts a proxy for accessing redis and postgres on the client cluster.
 # Setting up
 For setup make sure you have the correct configuration in values.yaml. Especialy for redis and postgresUri.
 
-Postgres uri is the base64 value of 'postgresql://username:password@hostname:5432/dbname'. The hostname will be kubernetes DNS in the format of 'svcname.namespace.' etc.
+Postgres uri is the base64 value of 'postgres://username:password@hostname:5432/dbname'. The hostname will be kubernetes DNS in the format of 'svcname.namespace.' etc.
 
 # Proxy for redis
 Example requests:
