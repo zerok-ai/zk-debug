@@ -7,15 +7,17 @@ For setup make sure you have the correct configuration in values.yaml. Especialy
 Postgres uri is the base64 value of 'postgres://username:password@hostname:5432/dbname'. The hostname will be kubernetes DNS in the format of 'svcname.namespace.' etc.
 
 # Proxy for redis
-Example requests:
+Example requests: Replace db with your specific redis db.
 
-1. PUT http://webdis-server:port/SET/myKey/123
+1. PUT http://webdis-server:port/db/SET/myKey/123
 
-2. GET http://webdis-server:port/GET/myKey
+2. GET http://webdis-server:port/db/GET/myKey
 
-3. PUT http://webdis-server:port/HSET/myHash/field1/hello
+3. PUT http://webdis-server:port/db/HSET/myHash/field1/hello
 
-4. GET http://webdis-server:port/HGET/myHash/field1
+4. GET http://webdis-server:port/db/HGET/myHash/field1
+
+5. GET http://webdis-server:port/db/HGETALL/myHash
 
 # Proxy for postgres
 Examples:

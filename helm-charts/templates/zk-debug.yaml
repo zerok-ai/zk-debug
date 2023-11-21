@@ -5,7 +5,32 @@ metadata:
   labels:
   {{- include "zk-debug.labels" . | nindent 4 }}
 data:
-  webdis.json: {{ .Values.zkDebug.webdisJson | toYaml | indent 1 }}
+  webdis.json: |+  
+    {
+      "redis_host": "redis-master.zk-client.svc.cluster.local",
+      "redis_port": 6379,
+      "redis_auth": {{quote .Values.zkDebug.redisAuth }},
+      "http_host":  "0.0.0.0",
+      "http_port":  7379,
+      "threads":  4,
+      "daemonize": false,
+      "database": 0,
+      "acl": [
+        {
+          "disabled": ["DEBUG"]
+        },
+        {
+          "http_basic_auth":  "user:password",
+          "enabled":    ["DEBUG"]
+        }
+      ],
+      "hiredis": {
+        "keep_alive_sec": 15
+      },
+      "verbosity": 3,
+      "logfile": "/var/log/webdis.log"
+    }
+
 ---
 apiVersion: v1
 kind: Service
