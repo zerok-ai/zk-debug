@@ -20,8 +20,8 @@ Example requests:
 # Proxy for postgres
 Examples:
 
-1. To get full contents of a table.
-GET http://your-postgrest-server:port/my_table 
+1. To get full contents of a table with a limit.
+GET http://your-postgrest-server:port/my_table?limit=1
 
 2. Where condition with a column value equals a particular value
 GET http://your-postgrest-server:port/my_table?column1=eq.value1 
